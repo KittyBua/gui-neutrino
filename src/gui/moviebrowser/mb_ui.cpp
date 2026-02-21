@@ -55,16 +55,13 @@
 #include "driver/lcd4l.h"
 #endif
 
-#define TRACE  printf
 
 #define TITLE_FONT g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]
 #define FOOT_FONT g_Font[SNeutrinoSettings::FONT_TYPE_MENU_FOOT]
 
-extern bool timeset;
 
 void CMovieBrowser::hide(void)
 {
-	//TRACE("[mb]->%s\n", __func__);
 	if (m_header)	{
 		delete m_header; m_header = NULL;
 	}
@@ -105,7 +102,7 @@ void CMovieBrowser::hide(void)
 
 int CMovieBrowser::paint(void)
 {
-	TRACE("[mb]->%s\n", __func__);
+	dprintf(DEBUG_DEBUG, "[mb]->%s\n", __func__);
 
 	Font* font = g_Font[SNeutrinoSettings::FONT_TYPE_MOVIEBROWSER_LIST];
 	m_movieSelectionHandler = NULL;
@@ -129,7 +126,7 @@ int CMovieBrowser::paint(void)
 	if (m_pcBrowser == NULL || m_pcLastPlay == NULL ||
 			m_pcLastRecord == NULL || m_pcInfo1 == NULL || m_pcInfo2 == NULL || m_pcFilter == NULL)
 	{
-		TRACE("[mb] paint, ERROR: not enought memory to allocate windows");
+		dprintf(DEBUG_DEBUG, "[mb] paint, ERROR: not enought memory to allocate windows");
 		if (m_pcFilter != NULL)delete m_pcFilter;
 		if (m_pcBrowser != NULL)delete m_pcBrowser;
 		if (m_pcLastPlay != NULL) delete m_pcLastPlay;
@@ -188,7 +185,7 @@ int CMovieBrowser::paint(void)
 
 void CMovieBrowser::refresh(void)
 {
-	TRACE("[mb]->%s\n", __func__);
+	dprintf(DEBUG_DEBUG, "[mb]->%s\n", __func__);
 
 	refreshTitle();
 
@@ -216,7 +213,6 @@ std::string CMovieBrowser::getCurrentDir(void)
 
 CFile* CMovieBrowser::getSelectedFile(void)
 {
-	//TRACE("[mb]->%s: %s\n", __func__, m_movieSelectionHandler->file.Name.c_str());
 
 	if (m_movieSelectionHandler != NULL)
 		return(&m_movieSelectionHandler->file);
@@ -272,7 +268,7 @@ std::string CMovieBrowser::getScreenshotName(std::string movie, bool is_dir)
 
 void CMovieBrowser::refreshChannelLogo(void)
 {
-	TRACE("[mb]->%s:%d\n", __func__, __LINE__);
+	dprintf(DEBUG_DEBUG, "[mb]->%s:%d\n", __func__, __LINE__);
 
 	// set channel logo
 	if (g_settings.channellist_show_channellogo)
@@ -288,7 +284,7 @@ void CMovieBrowser::refreshChannelLogo(void)
 
 void CMovieBrowser::initMovieCover(void)
 {
-	TRACE("[mb]->%s:%d\n", __func__, __LINE__);
+	dprintf(DEBUG_DEBUG, "[mb]->%s:%d\n", __func__, __LINE__);
 
 	CBox movieCoverBox;
 
@@ -344,7 +340,7 @@ void CMovieBrowser::initMovieCover(void)
 				cover_w /= 2; // cover is upright, so we use just half width first
 
 			m_movieCover->setHeight(0); // force recalculation
-TRACE("[mb]->%s:%d m_movieCover->getHeight(): %d\n", __func__, __LINE__, m_movieCover->getHeight());
+dprintf(DEBUG_DEBUG, "[mb]->%s:%d m_movieCover->getHeight(): %d\n", __func__, __LINE__, m_movieCover->getHeight());
 			m_movieCover->setWidth(cover_w);
 			if (m_movieCover->getHeight() > movieCoverBox.iHeight/3)
 				m_movieCover->setHeight(movieCoverBox.iHeight/3); // use maximal one third of box height
@@ -355,7 +351,7 @@ TRACE("[mb]->%s:%d m_movieCover->getHeight(): %d\n", __func__, __LINE__, m_movie
 		else
 		{
 			m_movieCover->setWidth(0); // force recalculation
-TRACE("[mb]->%s:%d m_movieCover->getWidth(): %d\n", __func__, __LINE__, m_movieCover->getWidth());
+dprintf(DEBUG_DEBUG, "[mb]->%s:%d m_movieCover->getWidth(): %d\n", __func__, __LINE__, m_movieCover->getWidth());
 			m_movieCover->setHeight(cover_h);
 			if (m_movieCover->getWidth() > movieCoverBox.iWidth/3)
 				m_movieCover->setWidth(movieCoverBox.iWidth/3); // use maximal one third of box width
@@ -377,7 +373,7 @@ TRACE("[mb]->%s:%d m_movieCover->getWidth(): %d\n", __func__, __LINE__, m_movieC
 
 void CMovieBrowser::refreshMovieCover(void)
 {
-	TRACE("[mb]->%s:%d\n", __func__, __LINE__);
+	dprintf(DEBUG_DEBUG, "[mb]->%s:%d\n", __func__, __LINE__);
 
 	if (m_movieCover)
 		m_movieCover->paint(CC_SAVE_SCREEN_YES);
@@ -385,7 +381,7 @@ void CMovieBrowser::refreshMovieCover(void)
 
 void CMovieBrowser::hideMovieCover(void)
 {
-	TRACE("[mb]->%s:%d\n", __func__, __LINE__);
+	dprintf(DEBUG_DEBUG, "[mb]->%s:%d\n", __func__, __LINE__);
 
 	if (m_movieCover)
 		m_movieCover->hide();
@@ -393,7 +389,7 @@ void CMovieBrowser::hideMovieCover(void)
 
 void CMovieBrowser::refreshMovieInfo(void)
 {
-	TRACE("[mb]->%s m_vMovieInfo.size %d\n", __func__, (int)m_vMovieInfo.size());
+	dprintf(DEBUG_DEBUG, "[mb]->%s m_vMovieInfo.size %d\n", __func__, (int)m_vMovieInfo.size());
 
 	// clear m_pcInfo1 text before new init
 	m_pcInfo1->clear();
@@ -481,7 +477,7 @@ void CMovieBrowser::refreshDetailsLine(int pos)
 
 void CMovieBrowser::refreshHDDLevel(bool show)
 {
-	TRACE("[mb]->%s:%d\n", __func__, __LINE__);
+	dprintf(DEBUG_DEBUG, "[mb]->%s:%d\n", __func__, __LINE__);
 
 	int percent_used = 0;
 	struct statfs s;
@@ -528,7 +524,7 @@ void CMovieBrowser::refreshLCD(void)
 
 void CMovieBrowser::refreshFilterList(void)
 {
-	TRACE("[mb]->refreshFilterList %d\n",m_settings.filter.item);
+	dprintf(DEBUG_DEBUG, "[mb]->refreshFilterList %d\n",m_settings.filter.item);
 
 	std::string string_item;
 
@@ -599,7 +595,6 @@ void CMovieBrowser::refreshFilterList(void)
 
 void CMovieBrowser::refreshLastPlayList(void) //P2
 {
-	//TRACE("[mb]->refreshlastPlayList \n");
 	std::string string_item;
 
 	// Initialise and clear list array
@@ -657,7 +652,6 @@ void CMovieBrowser::refreshLastPlayList(void) //P2
 
 void CMovieBrowser::refreshLastRecordList(void) //P2
 {
-	//TRACE("[mb]->refreshLastRecordList \n");
 	std::string string_item;
 
 	// Initialise and clear list array
@@ -716,7 +710,7 @@ void CMovieBrowser::refreshLastRecordList(void) //P2
 
 void CMovieBrowser::refreshBrowserList(void) //P1
 {
-	TRACE("[mb]->%s\n", __func__);
+	dprintf(DEBUG_DEBUG, "[mb]->%s\n", __func__);
 	std::string string_item;
 
 	// Initialise and clear list array
@@ -832,7 +826,7 @@ void CMovieBrowser::refreshTitle(void)
 	std::string title = m_textTitle.c_str();
 	const char *icon = NEUTRINO_ICON_MOVIEPLAYER;
 
-	TRACE("[mb]->refreshTitle: %s\n", title.c_str());
+	dprintf(DEBUG_DEBUG, "[mb]->refreshTitle: %s\n", title.c_str());
 
 	int x = m_cBoxFrameTitleRel.iX + m_cBoxFrame.iX;
 	int y = m_cBoxFrameTitleRel.iY + m_cBoxFrame.iY;
@@ -860,7 +854,6 @@ void CMovieBrowser::refreshTitle(void)
 
 int CMovieBrowser::refreshFoot(bool show)
 {
-	//TRACE("[mb]->refreshButtonLine\n");
 	int offset = (m_settings.gui != MB_GUI_LAST_PLAY && m_settings.gui != MB_GUI_LAST_RECORD) ? 0 : 2;
 	neutrino_locale_t ok_loc = (m_settings.gui == MB_GUI_FILTER && m_windowFocus == MB_FOCUS_FILTER) ?  LOCALE_BOOKMARKMANAGER_SELECT : LOCALE_MOVIEBROWSER_FOOT_PLAY;
 	int ok_loc_len = std::max(FOOT_FONT->getRenderWidth(g_Locale->getText(LOCALE_BOOKMARKMANAGER_SELECT), true),
